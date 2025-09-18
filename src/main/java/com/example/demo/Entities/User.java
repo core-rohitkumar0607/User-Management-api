@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+ 
 
 @Entity
 public class User {
@@ -14,13 +16,22 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column
+	@NotBlank(message = "Name is required") 
+	@Size(max = 50 , message = "Max 50 character allowed !")
+	@Column(nullable = false)
 	private String name;
-	@Column
+	
+	@NotBlank(message = "Email is required !")
+	@Column(nullable = false , unique = true)
 	private String email;
-	@Column
+	
+	@NotBlank(message = "Password is required !")
+	@Size(min = 6, message = "Password must be at least character")
+	@Column(nullable = false)
 	private String password;
-	@Column
+	
+	@NotBlank(message = "City name is required !")
+	@Column(nullable = false)
 	private String city;
 	
 	public int getId() {

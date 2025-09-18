@@ -16,19 +16,28 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.Entities.User;
 import com.example.demo.Services.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class Mycontroller {
 	@Autowired
 	private UserService userService;
 	
+	// For Adding User ------
+	
 	@PostMapping("/user")
-	public User addUserDetail(@RequestBody User user ) {
+	public User addUserDetail(@Valid @RequestBody User user ) {
 		return userService.createUser(user); 
 	}
+	
+	// For Fetch All user Details -----
 	@GetMapping("/user")
 	public List<User> getAllUserDetail() {
 		return userService.getAllUsers();
 	}
+	
+	// For Fetch user detail via id ------
+	
 	@GetMapping("/user/{id}")
 	public ResponseEntity<User> getUserDetail(@PathVariable("id") int id){
 		User user=userService.getUserDetails(id).orElse(null);
@@ -39,8 +48,11 @@ public class Mycontroller {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	// For Updating user detail via id -------
+	
 	@PutMapping("/user/{id}")
-	public ResponseEntity<User> updateUserDetails(@PathVariable("id") int id , @RequestBody User user ){
+	public ResponseEntity<User> updateUserDetails(@PathVariable("id") int id ,@Valid @RequestBody User user ){
 		user.setId(id);
 		User updatedUser= userService.updateUserDetails(id, user);
 		if(updatedUser != null) {
@@ -50,6 +62,8 @@ public class Mycontroller {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	// For Delete User Details ---------
 	@DeleteMapping("/user/{id}")
 	public ResponseEntity<String> deleteUserDetails(@PathVariable("id") int id){
 		userService.deletedUserDetails(id);

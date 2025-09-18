@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.Entities.User;
 import com.example.demo.Repository.UserRepository;
+import com.example.demo.exception.ResourceNotFoundException;
 
 @Service
-public class UserServiceImp implements UserService {
-	
+public class UserServiceImp implements UserService { 
 	@Autowired
 	public UserRepository userRepository;
 	@Override	
@@ -31,16 +31,24 @@ public class UserServiceImp implements UserService {
 		return userRepository.findById(id);
 	}
 	
-	@Override
-	public User updateUserDetails(int id ,User newUser) {
-		User userData= userRepository.findById(id).orElse(null);
-		if(userData!=null) {
-			return userRepository.save(newUser);
+		@Override
+		public User updateUserDetails(int id, User newUser) {
+		    User userData = userRepository.findById(id)
+		        .orElseThrow(() -> new ResourceNotFoundException("User Not Found By ID: " + id));
+		    userData.setName(newUser.getName());
+		    userData.setEmail(newUser.getEmail());
+		    userData.setPassword(newUser.getPassword());
+		    userData.setCity(newUser.getCity());
+		    return userRepository.save(newUser);
 		}
-		else {
-			throw new RuntimeException("User Not Found By ID :"+id);
-		}
-	}
+
+//		if(userData!=null) {
+//			return userRepository.save(newUser);
+//		}
+//		else {
+//			throw new RuntimeException("User Not Found By ID :"+id);
+//		}
+//	}
 	@Override
 	public void deletedUserDetails(int id) {
 		userRepository.deleteById(id);
